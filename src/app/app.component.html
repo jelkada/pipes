@@ -1,0 +1,77 @@
+<div class="container my-5">
+
+  <div class="row no-gutters">
+    <div class="col-xs-12">
+      <h3>Pipes - transforming and filtering data (<a href="https://github.com/jelkada/pipes" target="_blank">see on github</a>)</h3>
+      <ul>
+        <li>The example shows few examples of pipes which are used to transform output in the HTML template:</li>
+        <li>Built-in “lowercase” pipe to transforms text to all lower case.</li>
+        <li>Built-in formatting date with parameter - date:'fullDate’ (parameters can be added with colon-delimited list).</li>
+        <li>Custom pipe with parameter “shorten:8” to shorten the server name to max 8 characters with the 3 dot ellipsis sign.</li>
+        <li>Custom pipe that works on an array of objects “filter:selectedStatus” using the selected option from the drop down list.</li>
+        <li>Built-in async pipe that returns the value asynchronously after a promise or an observable emits data.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+
+      appStatus (async pipe): {{ appStatus | async }}
+
+      <hr class="my-4"/>
+
+      Select filter:
+      <select class="custom-select w-50 d-inline-block ml-2"
+              [(ngModel)]="selectedStatus" [value]="'all'">
+        <option value="all">all</option>
+        <option value="stable">stable</option>
+        <option value="offline">offline</option>
+        <option value="critical">critical</option>
+      </select>
+
+      <hr class="my-4"/>
+
+      <ul class="list-group">
+        <li class="list-group-item"
+            *ngFor="let server of servers | filter:selectedStatus"
+            [ngClass]="getStatusClasses(server)">
+        <span class="badge badge-secondary float-right">{{ server.status }}</span>
+        <strong>{{ server.name | shorten:8}}</strong> |
+        {{ server.instanceType | lowercase }} |
+        {{ server.started | date:'fullDate' }}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <hr class="mt-5"/>
+
+  <div class="row no-gutters">
+    <div class="col-xs-12 ng-non-bindable">
+      <h4 class="mt-3">Pipes basics:</h4>
+      <ul>
+        <li>Pipes are used to transform output in the HTML template</li>
+        <li>Pipes can be parameterized using colon-delimited list and chained using additional pipe signs.</li>
+        <li>In addition to built-in pipes, it is easy to create custom pipe classes using the @Pipe decorator.</li>
+        <li>By default pipes are “pure” - it does not re-apply or recalculated whenever the data on the page refreshes (due to performance).</li>
+        <li>Angular does not refresh the pipe or filtering as new data is added, by default, the filtering applies only to the initial data.</li>
+        <li>To trigger recalculation of the pipe filter every time the data changes on the page, use pure:‘false’ in the pipe decorator.</li>
+        <li>The async pipe is unique one that works with promises and observables and returns the value asynchronously after it has been emitted.</li>
+      </ul>
+      <h4 class="mt-3">Usage guidelines:</h4>
+      <ul>
+        <li>Import the pipe related modules in the new custom pipe class, and declare them in app.module.ts.<br/>import &#123; Pipe, PipeTransform &#125; from '@angular/core';</li>
+        <li>Define a class using the @Pipe decorator and at least the metadata name property which defines how the pipe is used in the HTML template.</li>
+        <li>Implement the PipeTransform interface's transform() method. This method takes the value being piped and optional arguments, and return a transformed/piped value.</li>
+        <li>Chain multiple pipes using the Pipe symbole | (left to right order is important).</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
